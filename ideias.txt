@@ -1,0 +1,36 @@
+while (stop)
+    {
+
+        if (this->isBakcup == 1)
+        {
+            while (stop or portChange)
+            {
+                sleep(KEEP_ALIVE_TIME + 1);
+
+                recv(servers[findPrimaryServerIndex()].sockfd, &buffer, sizeof(int), 0);
+                cout << "\nBuffer: " << buffer << endl;
+                if (buffer != 5)
+                {
+                    printf("Primary server timed out.\n");
+                    // startElection(server);
+                };
+            }
+        }
+        else if (this->isBakcup == 0)
+        {
+            while (TRUE)
+            {
+                sleep(KEEP_ALIVE_TIME);
+                std::cout << "Sending keep alive message to replica" << std::endl;
+
+                for (int i = 1; i <= serversOn; i++)
+                {
+                    if (servers[i].active)
+                    {
+                        std::cout << "Real sending" << std::endl;
+                        send(servers[i].sockfd, &buffer, sizeof(buffer), 0);
+                    }
+                }
+            };
+        }
+    }
